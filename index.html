@@ -60,24 +60,6 @@
   }
   #search:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(168,85,247,.2); }
 
-  #filters { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; width: 100%; }
-  .filter-btn {
-    padding: 8px 16px;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-    background: transparent;
-    color: var(--muted);
-    cursor: pointer;
-    font-size: 14px;
-    transition: .2s;
-  }
-  .filter-btn:hover { border-color: var(--accent); color: var(--text); }
-  .filter-btn.active {
-    background: linear-gradient(135deg, var(--accent), var(--accent-2));
-    color: #fff;
-    border-color: transparent;
-  }
-
   .grid {
     max-width: 1100px;
     margin: 0 auto;
@@ -216,7 +198,6 @@
 
 <div class="controls">
   <input id="search" type="text" placeholder="🔍 Buscar scripts...">
-  <div id="filters"></div>
 </div>
 
 <main class="grid" id="grid"></main>
@@ -237,78 +218,26 @@
 
 <script>
 /* ============================================================
-   EDITE AQUI — adicione seus scripts neste array
+   SEUS SCRIPTS
    ============================================================ */
 const scripts = [
   {
-    name: "Auto Farm",
-    description: "Farm automático de recursos no mapa com loop configurável.",
-    category: "Farm",
-    tags: ["loop", "automation", "farm"],
-    code: `-- Auto Farm
-local player = game.Players.LocalPlayer
-while true do
-    task.wait(1)
-    -- seu código aqui
-    print("Farmando...")
-end`
-  },
-  {
-    name: "ESP Básico",
-    description: "Destaca jogadores através das paredes com caixa e nome.",
-    category: "Visual",
-    tags: ["esp", "visual", "highlight"],
-    code: `-- ESP Básico
-local Players = game:GetService("Players")
--- seu código aqui`
-  },
-  {
-    name: "Teleport Tool",
-    description: "Ferramenta de teleporte clicando em qualquer lugar.",
-    category: "Utilidades",
-    tags: ["teleport", "tool"],
-    code: `-- Teleport
-local UIS = game:GetService("UserInputService")
--- seu código aqui`
-  },
-  {
-    name: "Anti AFK",
-    description: "Impede que você seja kickado por inatividade.",
-    category: "Utilidades",
-    tags: ["afk", "anti", "kick"],
-    code: `-- Anti AFK
-local VU = game:GetService("VirtualUser")
-game:GetService("Players").LocalPlayer.Idled:Connect(function()
-    VU:CaptureController()
-    VU:ClickButton2(Vector2.new())
-end)`
+    name: "Son hub (Steal an egg)",
+    description: "Script Sonhub para o jogo Steal an Egg.",
+    tags: ["steal an egg", "sonhub", "universal"],
+    code: `loadstring(game:HttpGet("https://gist.githubusercontent.com/vdavy779-create/efa04645e1ed9587ce24f9b959fec5dc/raw/d3fc2f0345de3d3d107de0b6f8e0fdf1d166937e/sonhub.lua"))()`
   }
 ];
 
 /* ============================ LÓGICA ============================ */
 const grid = document.getElementById('grid');
 const searchInput = document.getElementById('search');
-const filtersEl = document.getElementById('filters');
 const modal = document.getElementById('modal');
 const modalTitle = document.getElementById('modal-title');
 const modalCode = document.getElementById('modal-code');
 const toast = document.getElementById('toast');
 
-let activeCategory = 'Todos';
-const categories = ['Todos', ...new Set(scripts.map(s => s.category))];
-
 document.getElementById('year').textContent = new Date().getFullYear();
-
-function renderFilters() {
-  filtersEl.innerHTML = '';
-  categories.forEach(cat => {
-    const btn = document.createElement('button');
-    btn.className = 'filter-btn' + (cat === activeCategory ? ' active' : '');
-    btn.textContent = cat;
-    btn.onclick = () => { activeCategory = cat; renderFilters(); render(); };
-    filtersEl.appendChild(btn);
-  });
-}
 
 function copyScript(code) {
   navigator.clipboard.writeText(code).then(() => {
@@ -329,12 +258,10 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal()
 function render() {
   const q = searchInput.value.toLowerCase().trim();
   const filtered = scripts.filter(s => {
-    const matchCat = activeCategory === 'Todos' || s.category === activeCategory;
-    const matchQ = !q ||
+    return !q ||
       s.name.toLowerCase().includes(q) ||
       s.description.toLowerCase().includes(q) ||
       s.tags.some(t => t.toLowerCase().includes(q));
-    return matchCat && matchQ;
   });
 
   grid.innerHTML = '';
@@ -362,7 +289,6 @@ function render() {
 }
 
 searchInput.addEventListener('input', render);
-renderFilters();
 render();
 </script>
 </body>
