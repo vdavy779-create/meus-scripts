@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meus Scripts · Roblox</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0b0b12;
+    --card: #15151f;
+    --border: #26262f;
+    --accent: #a855f7;
+    --accent-2: #7c3aed;
+    --text: #e8e8ef;
+    --muted: #8b8b9a;
+  }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    background-image: radial-gradient(circle at 20% 0%, rgba(168,85,247,.15), transparent 40%),
+                      radial-gradient(circle at 80% 100%, rgba(124,58,237,.12), transparent 40%);
+  }
+  header {
+    text-align: center;
+    padding: 48px 20px 24px;
+  }
+  header h1 {
+    font-size: 2.4rem;
+    background: linear-gradient(90deg, #c084fc, #a855f7, #7c3aed);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  header p { color: var(--muted); margin-top: 8px; }
+
+  .controls {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  #search {
+    flex: 1;
+    min-width: 240px;
+    max-width: 420px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text);
+    font-size: 15px;
+    outline: none;
+    transition: .2s;
+  }
+  #search:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(168,85,247,.2); }
+
+  #filters { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; width: 100%; }
+  .filter-btn {
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 14px;
+    transition: .2s;
+  }
+  .filter-btn:hover { border-color: var(--accent); color: var(--text); }
+  .filter-btn.active {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #fff;
+    border-color: transparent;
+  }
+
+  .grid {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 18px;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    transition: .25s;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .card:hover {
+    border-color: var(--accent);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(168,85,247,.15);
+  }
+  .card h3 { font-size: 1.15rem; }
+  .card .desc { color: var(--muted); font-size: 14px; line-height: 1.5; flex: 1; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag {
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 12px;
+    background: rgba(168,85,247,.12);
+    color: #c084fc;
+    border: 1px solid rgba(168,85,247,.25);
+  }
+  .actions { display: flex; gap: 8px; margin-top: 4px; }
+  .btn {
+    flex: 1;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: .2s;
+  }
+  .btn-copy {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #fff;
+  }
+  .btn-copy:hover { filter: brightness(1.15); }
+  .btn-view {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn-view:hover { border-color: var(--accent); }
+
+  .empty { text-align: center; color: var(--muted); grid-column: 1/-1; padding: 60px 0; }
+
+  /* Modal */
+  .modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.75);
+    backdrop-filter: blur(6px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 100;
+  }
+  .modal.open { display: flex; }
+  .modal-content {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    max-width: 800px;
+    width: 100%;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .modal-header {
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .modal-header h3 { font-size: 1.1rem; }
+  .close-btn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 24px;
+    cursor: pointer;
+    line-height: 1;
+  }
+  .close-btn:hover { color: var(--text); }
+  .modal pre {
+    padding: 20px;
+    overflow: auto;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #d4d4e0;
+    background: #0d0d14;
+    flex: 1;
+  }
+
+  footer { text-align: center; padding: 40px 20px; color: var(--muted); font-size: 13px; }
+
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--accent);
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: .3s;
+    z-index: 200;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Meus Scripts</h1>
+  <p>Coleção de scripts para Roblox · clique para copiar</p>
+</header>
+
+<div class="controls">
+  <input id="search" type="text" placeholder="🔍 Buscar scripts...">
+  <div id="filters"></div>
+</div>
+
+<main class="grid" id="grid"></main>
+
+<footer>Feito por mim · &copy; <span id="year"></span></footer>
+
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="modal-title"></h3>
+      <button class="close-btn" onclick="closeModal()">&times;</button>
+    </div>
+    <pre><code id="modal-code"></code></pre>
+  </div>
+</div>
+
+<div class="toast" id="toast">Copiado! ✅</div>
+
+<script>
+/* ============================================================
+   EDITE AQUI — adicione seus scripts neste array
+   ============================================================ */
+const scripts = [
+  {
+    name: "Auto Farm",
+    description: "Farm automático de recursos no mapa com loop configurável.",
+    category: "Farm",
+    tags: ["loop", "automation", "farm"],
+    code: `-- Auto Farm
+local player = game.Players.LocalPlayer
+while true do
+    task.wait(1)
+    -- seu código aqui
+    print("Farmando...")
+end`
+  },
+  {
+    name: "ESP Básico",
+    description: "Destaca jogadores através das paredes com caixa e nome.",
+    category: "Visual",
+    tags: ["esp", "visual", "highlight"],
+    code: `-- ESP Básico
+local Players = game:GetService("Players")
+-- seu código aqui`
+  },
+  {
+    name: "Teleport Tool",
+    description: "Ferramenta de teleporte clicando em qualquer lugar.",
+    category: "Utilidades",
+    tags: ["teleport", "tool"],
+    code: `-- Teleport
+local UIS = game:GetService("UserInputService")
+-- seu código aqui`
+  },
+  {
+    name: "Anti AFK",
+    description: "Impede que você seja kickado por inatividade.",
+    category: "Utilidades",
+    tags: ["afk", "anti", "kick"],
+    code: `-- Anti AFK
+local VU = game:GetService("VirtualUser")
+game:GetService("Players").LocalPlayer.Idled:Connect(function()
+    VU:CaptureController()
+    VU:ClickButton2(Vector2.new())
+end)`
+  }
+];
+
+/* ============================ LÓGICA ============================ */
+const grid = document.getElementById('grid');
+const searchInput = document.getElementById('search');
+const filtersEl = document.getElementById('filters');
+const modal = document.getElementById('modal');
+const modalTitle = document.getElementById('modal-title');
+const modalCode = document.getElementById('modal-code');
+const toast = document.getElementById('toast');
+
+let activeCategory = 'Todos';
+const categories = ['Todos', ...new Set(scripts.map(s => s.category))];
+
+document.getElementById('year').textContent = new Date().getFullYear();
+
+function renderFilters() {
+  filtersEl.innerHTML = '';
+  categories.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn' + (cat === activeCategory ? ' active' : '');
+    btn.textContent = cat;
+    btn.onclick = () => { activeCategory = cat; renderFilters(); render(); };
+    filtersEl.appendChild(btn);
+  });
+}
+
+function copyScript(code) {
+  navigator.clipboard.writeText(code).then(() => {
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 1800);
+  }).catch(() => alert('Não foi possível copiar.'));
+}
+
+function openModal(script) {
+  modalTitle.textContent = script.name;
+  modalCode.textContent = script.code;
+  modal.classList.add('open');
+}
+function closeModal() { modal.classList.remove('open'); }
+modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+function render() {
+  const q = searchInput.value.toLowerCase().trim();
+  const filtered = scripts.filter(s => {
+    const matchCat = activeCategory === 'Todos' || s.category === activeCategory;
+    const matchQ = !q ||
+      s.name.toLowerCase().includes(q) ||
+      s.description.toLowerCase().includes(q) ||
+      s.tags.some(t => t.toLowerCase().includes(q));
+    return matchCat && matchQ;
+  });
+
+  grid.innerHTML = '';
+  if (!filtered.length) {
+    grid.innerHTML = '<p class="empty">Nenhum script encontrado 😕</p>';
+    return;
+  }
+
+  filtered.forEach(s => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <h3>${s.name}</h3>
+      <p class="desc">${s.description}</p>
+      <div class="tags">${s.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+      <div class="actions">
+        <button class="btn btn-copy">📋 Copiar</button>
+        <button class="btn btn-view">👁 Ver código</button>
+      </div>
+    `;
+    card.querySelector('.btn-copy').onclick = () => copyScript(s.code);
+    card.querySelector('.btn-view').onclick = () => openModal(s);
+    grid.appendChild(card);
+  });
+}
+
+searchInput.addEventListener('input', render);
+renderFilters();
+render();
+</script>
+</body>
+</html>
