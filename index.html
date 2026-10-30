@@ -3,196 +3,35 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>.. scripts.</title>
+<title>.. scripts. | Gerador de Key</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
-    --bg: #0b0b12;
-    --card: #15151f;
-    --border: #26262f;
-    --accent: #a855f7;
-    --accent-2: #7c3aed;
-    --text: #e8e8ef;
-    --muted: #8b8b9a;
+    --bg: #0b0b12; --card: #15151f; --border: #26262f;
+    --accent: #a855f7; --accent-2: #7c3aed; --text: #e8e8ef; --muted: #8b8b9a;
   }
   body {
-    font-family: 'Segoe UI', system-ui, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    background-image: radial-gradient(circle at 20% 0%, rgba(168,85,247,.15), transparent 40%),
-                      radial-gradient(circle at 80% 100%, rgba(124,58,237,.12), transparent 40%);
+    font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh;
+    display: flex; flex-direction: column;
+    background-image: radial-gradient(circle at 20% 0%, rgba(168,85,247,.15), transparent 40%), radial-gradient(circle at 80% 100%, rgba(124,58,237,.12), transparent 40%);
   }
-  header {
-    text-align: center;
-    padding: 48px 20px 24px;
-  }
-  header h1 {
-    font-size: 2.4rem;
-    background: linear-gradient(90deg, #c084fc, #a855f7, #7c3aed);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .feito-por {
-    color: #facc15; /* Amarelo */
-    font-weight: 700;
-    margin-top: 8px;
-    font-size: 16px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-
-  .controls {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 20px;
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  #search {
-    flex: 1;
-    min-width: 240px;
-    max-width: 420px;
-    padding: 12px 16px;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    background: var(--card);
-    color: var(--text);
-    font-size: 15px;
-    outline: none;
-    transition: .2s;
-  }
-  #search:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(168,85,247,.2); }
-
-  .grid {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 20px;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 18px;
-  }
-  .card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 20px;
-    transition: .25s;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  .card:hover {
-    border-color: var(--accent);
-    transform: translateY(-4px);
-    box-shadow: 0 12px 30px rgba(168,85,247,.15);
-  }
-  .card h3 { font-size: 1.15rem; }
-  .card .desc { color: var(--muted); font-size: 14px; line-height: 1.5; flex: 1; }
-  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
-  .tag {
-    font-size: 11px;
-    padding: 4px 10px;
-    border-radius: 12px;
-    background: rgba(168,85,247,.12);
-    color: #c084fc;
-    border: 1px solid rgba(168,85,247,.25);
-  }
-  .actions { display: flex; gap: 8px; margin-top: 4px; }
-  .btn {
-    flex: 1;
-    padding: 10px;
-    border-radius: 10px;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 600;
-    transition: .2s;
-  }
-  .btn-copy {
-    background: linear-gradient(135deg, var(--accent), var(--accent-2));
-    color: #fff;
-  }
-  .btn-copy:hover { filter: brightness(1.15); }
-  .btn-view {
-    background: transparent;
-    color: var(--text);
-    border: 1px solid var(--border);
-  }
-  .btn-view:hover { border-color: var(--accent); }
-
-  .empty { text-align: center; color: var(--muted); grid-column: 1/-1; padding: 60px 0; }
-
-  /* Modal */
-  .modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.75);
-    backdrop-filter: blur(6px);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    z-index: 100;
-  }
-  .modal.open { display: flex; }
-  .modal-content {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    max-width: 800px;
-    width: 100%;
-    max-height: 85vh;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-  .modal-header {
-    padding: 18px 20px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .modal-header h3 { font-size: 1.1rem; }
-  .close-btn {
-    background: none;
-    border: none;
-    color: var(--muted);
-    font-size: 24px;
-    cursor: pointer;
-    line-height: 1;
-  }
-  .close-btn:hover { color: var(--text); }
-  .modal pre {
-    padding: 20px;
-    overflow: auto;
-    font-family: 'Consolas', 'Monaco', monospace;
-    font-size: 13px;
-    line-height: 1.6;
-    color: #d4d4e0;
-    background: #0d0d14;
-    flex: 1;
-  }
-
-  footer { text-align: center; padding: 40px 20px; color: var(--muted); font-size: 13px; }
-
-  .toast {
-    position: fixed;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%) translateY(100px);
-    background: var(--accent);
-    color: #fff;
-    padding: 12px 24px;
-    border-radius: 12px;
-    font-weight: 600;
-    transition: .3s;
-    z-index: 200;
-  }
+  header { text-align: center; padding: 48px 20px 24px; }
+  header h1 { font-size: 2.4rem; background: linear-gradient(90deg, #c084fc, #a855f7, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .feito-por { color: #facc15; font-weight: 700; margin-top: 8px; font-size: 16px; text-transform: uppercase; letter-spacing: 1px; }
+  .main-container { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; }
+  .key-box { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 30px 20px; max-width: 450px; width: 100%; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+  .key-box h2 { font-size: 1.5rem; margin-bottom: 8px; color: var(--text); }
+  .key-box p { font-size: 14px; color: var(--muted); margin-bottom: 24px; line-height: 1.5; }
+  .key-display { width: 100%; padding: 16px; background: #0d0d14; border: 1px solid var(--border); border-radius: 12px; color: var(--accent); font-size: 20px; font-weight: 700; text-align: center; letter-spacing: 2px; margin-bottom: 16px; outline: none; }
+  .key-display::placeholder { color: var(--border); letter-spacing: normal; font-weight: normal; font-size: 15px;}
+  .btn-generate { width: 100%; padding: 16px; border-radius: 12px; border: none; background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff; font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+  .btn-generate:hover { filter: brightness(1.15); transform: scale(1.02); }
+  .btn-generate:active { transform: scale(0.98); }
+  .btn-generate:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+  .btn-copy { width: 100%; padding: 14px; margin-top: 10px; border-radius: 12px; border: 1px solid var(--border); background: transparent; color: var(--text); font-size: 15px; font-weight: 600; cursor: pointer; display: none; }
+  .btn-copy:hover { background: rgba(255,255,255,0.05); }
+  footer { text-align: center; padding: 20px; color: var(--muted); font-size: 13px; }
+  .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--accent); color: #fff; padding: 12px 24px; border-radius: 12px; font-weight: 600; transition: .3s; z-index: 200; }
   .toast.show { transform: translateX(-50%) translateY(0); }
 </style>
 </head>
@@ -203,100 +42,74 @@
   <p class="feito-por">Feito por: ..</p>
 </header>
 
-<div class="controls">
-  <input id="search" type="text" placeholder="🔍 Buscar scripts...">
-</div>
-
-<main class="grid" id="grid"></main>
-
-<footer>Feito por mim · &copy; <span id="year"></span></footer>
-
-<div class="modal" id="modal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h3 id="modal-title"></h3>
-      <button class="close-btn" onclick="closeModal()">&times;</button>
-    </div>
-    <pre><code id="modal-code"></code></pre>
+<div class="main-container">
+  <div class="key-box">
+    <h2>🔑 Gerador de Key</h2>
+    <p>Clique no botão abaixo para gerar sua key de acesso. Ela é válida por <b>24 horas</b>.</p>
+    
+    <input type="text" id="keyDisplay" class="key-display" readonly placeholder="Sua key aparecerá aqui">
+    
+    <button id="generateBtn" class="btn-generate">Gerar Key</button>
+    <button id="copyBtn" class="btn-copy">📋 Copiar Key</button>
   </div>
 </div>
 
-<div class="toast" id="toast">Copiado! ✅</div>
+<footer>.. scripts. &copy; <span id="year"></span></footer>
+
+<div class="toast" id="toast">Key Copiada! ✅</div>
 
 <script>
-/* ============================================================
-   SEUS SCRIPTS
-   ============================================================ */
-const scripts = [
-  {
-    name: "Son hub (Steal an egg)",
-    description: "O bicho não tira o ovo da sua mão.",
-    tags: ["steal an egg", "sonhub", "proteção"],
-    code: `loadstring(game:HttpGet("https://pastebin.com/raw/zHygb3CF"))()`
-  }
-];
-
-/* ============================ LÓGICA ============================ */
-const grid = document.getElementById('grid');
-const searchInput = document.getElementById('search');
-const modal = document.getElementById('modal');
-const modalTitle = document.getElementById('modal-title');
-const modalCode = document.getElementById('modal-code');
-const toast = document.getElementById('toast');
+// ==========================================
+// SUA URL DO FIREBASE JÁ ESTÁ AQUI:
+// ==========================================
+const FIREBASE_URL = "https://scripts-none-default-rtdb.firebaseio.com"; 
 
 document.getElementById('year').textContent = new Date().getFullYear();
 
-function copyScript(code) {
-  navigator.clipboard.writeText(code).then(() => {
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 1800);
-  }).catch(() => alert('Não foi possível copiar.'));
-}
+const generateBtn = document.getElementById('generateBtn');
+const keyDisplay = document.getElementById('keyDisplay');
+const copyBtn = document.getElementById('copyBtn');
+const toast = document.getElementById('toast');
 
-function openModal(script) {
-  modalTitle.textContent = script.name;
-  modalCode.textContent = script.code;
-  modal.classList.add('open');
-}
-function closeModal() { modal.classList.remove('open'); }
-modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+generateBtn.onclick = async function() {
+    generateBtn.innerText = "Gerando...";
+    generateBtn.disabled = true;
+    copyBtn.style.display = "none";
+    
+    const randomStr = Math.random().toString(36).substring(2, 6).toUpperCase() + "-" + Math.random().toString(36).substring(2, 6).toUpperCase();
+    const key = `NONE-${randomStr}`;
+    const expiresAt = Math.floor(Date.now() / 1000) + (24 * 60 * 60);
+    
+    try {
+        const response = await fetch(`${FIREBASE_URL}/keys/${key}.json`, {
+            method: 'PUT',
+            body: JSON.stringify({ expiresAt: expiresAt, usedBy: null })
+        });
+        
+        if (response.ok) {
+            keyDisplay.value = key;
+            generateBtn.innerText = "Gerar Outra Key";
+            copyBtn.style.display = "block";
+        } else {
+            alert("Erro no servidor. Verifique as regras do Firebase.");
+            generateBtn.innerText = "Gerar Key";
+        }
+    } catch (error) {
+        alert("Erro de conexão. Tente novamente.");
+        generateBtn.innerText = "Gerar Key";
+    }
+    
+    generateBtn.disabled = false;
+};
 
-function render() {
-  const q = searchInput.value.toLowerCase().trim();
-  const filtered = scripts.filter(s => {
-    return !q ||
-      s.name.toLowerCase().includes(q) ||
-      s.description.toLowerCase().includes(q) ||
-      s.tags.some(t => t.toLowerCase().includes(q));
-  });
-
-  grid.innerHTML = '';
-  if (!filtered.length) {
-    grid.innerHTML = '<p class="empty">Nenhum script encontrado 😕</p>';
-    return;
-  }
-
-  filtered.forEach(s => {
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.innerHTML = `
-      <h3>${s.name}</h3>
-      <p class="desc">${s.description}</p>
-      <div class="tags">${s.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
-      <div class="actions">
-        <button class="btn btn-copy">📋 Copiar</button>
-        <button class="btn btn-view">👁 Ver código</button>
-      </div>
-    `;
-    card.querySelector('.btn-copy').onclick = () => copyScript(s.code);
-    card.querySelector('.btn-view').onclick = () => openModal(s);
-    grid.appendChild(card);
-  });
-}
-
-searchInput.addEventListener('input', render);
-render();
+copyBtn.onclick = function() {
+    if (keyDisplay.value) {
+        navigator.clipboard.writeText(keyDisplay.value).then(() => {
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        });
+    }
+};
 </script>
 </body>
 </html>
